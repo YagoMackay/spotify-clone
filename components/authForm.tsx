@@ -1,13 +1,17 @@
-import { Box, Flex, Input, Button } from '@chakra-ui/react'
+import { Box, Button, Flex, Input } from '@chakra-ui/react'
+import NextImage from 'next/image'
 import { useRouter } from 'next/router'
 import { FC, useState } from 'react'
-import { useSWRConfig } from 'swr'
-import NextImage from 'next/image'
 import { auth } from '../lib/mutations'
 
-const AuthForm: FC<{ mode: 'signin' | 'signup' }> = ({ mode }) => {
+const AuthForm: FC<{ mode: 'signin' | 'signup'; isSignUp: boolean }> = ({
+  mode,
+  isSignUp,
+}) => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [firstName, setFirstName] = useState('')
+  const [lastName, setLastName] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const router = useRouter()
 
@@ -15,7 +19,7 @@ const AuthForm: FC<{ mode: 'signin' | 'signup' }> = ({ mode }) => {
     e.preventDefault()
     setIsLoading(true)
 
-    await auth(mode, { email, password })
+    await auth(mode, { email, password, firstName, lastName })
     setIsLoading(false)
     router.push('/')
   }
@@ -43,6 +47,21 @@ const AuthForm: FC<{ mode: 'signin' | 'signup' }> = ({ mode }) => {
               type="password"
               onChange={(e) => setPassword(e.target.value)}
             />
+            {isSignUp && (
+              <>
+                {' '}
+                <Input
+                  placeholder="First Name"
+                  type="text"
+                  onChange={(e) => setFirstName(e.target.value)}
+                />
+                <Input
+                  placeholder="Last Name"
+                  type="text"
+                  onChange={(e) => setLastName(e.target.value)}
+                />
+              </>
+            )}
             <Button
               type="submit"
               bg="green.500"
