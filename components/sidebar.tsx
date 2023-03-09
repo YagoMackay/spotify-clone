@@ -1,21 +1,20 @@
+import {
+  Box,
+  Divider,
+  LinkBox,
+  LinkOverlay,
+  List,
+  ListIcon,
+  ListItem,
+} from '@chakra-ui/layout'
 import NextImage from 'next/image'
 import NextLink from 'next/link'
 import {
-  Box,
-  List,
-  ListItem,
-  ListIcon,
-  Divider,
-  Center,
-  LinkBox,
-  LinkOverlay,
-} from '@chakra-ui/layout'
-import {
+  MdFavorite,
   MdHome,
-  MdSearch,
   MdLibraryMusic,
   MdPlaylistAdd,
-  MdFavorite,
+  MdSearch,
 } from 'react-icons/md'
 import { usePlaylist } from '../lib/hooks'
 
@@ -55,13 +54,7 @@ const musicMenu = [
 const Sidebar = () => {
   const { playlists } = usePlaylist()
   return (
-    <Box
-      width="100%"
-      height="calc(100vh - 100px)"
-      bg="black"
-      paddingX="5px"
-      color="gray"
-    >
+    <Box width="100%" height="100%" bg="black" paddingX="5px" color="gray">
       <Box paddingY="20px" height="100%">
         <Box width="120px" marginBottom="20px" paddingX="20px">
           <NextImage src="/logo.svg" height={60} width={120} />
