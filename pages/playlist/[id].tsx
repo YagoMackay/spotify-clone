@@ -30,7 +30,7 @@ const Playlist = ({ playlist }) => {
       description={`${playlist.songs.length} songs`}
       image={`https://picsum.photos/400?random=${playlist.id}`}
     >
-      <SongTable songs={playlist.songs} />
+      <SongTable songs={playlist.songs} artist={playlist.artist} />
     </GradientLayout>
   )
 }
@@ -61,6 +61,7 @@ export const getServerSideProps = async ({ query, req }) => {
             select: {
               name: true,
               id: true,
+              avatar: true,
             },
           },
         },
