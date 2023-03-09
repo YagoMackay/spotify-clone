@@ -1,4 +1,4 @@
-import { Box, Flex, Text } from '@chakra-ui/layout'
+import { Box, SimpleGrid, Text } from '@chakra-ui/layout'
 import { Image } from '@chakra-ui/react'
 
 const GradientLayout = ({
@@ -16,16 +16,22 @@ const GradientLayout = ({
       overflowY="auto"
       bgGradient={`linear(${color}.500 0%, ${color}.600 15%, ${color}.700 40%, rgba(0,0,0,0.95) 75%)`}
     >
-      <Flex bg={`${color}.600`} padding="40px" align="end">
+      <SimpleGrid
+        bg={`${color}.600`}
+        align="start"
+        minChildWidth="220px"
+        spacing="10px"
+      >
         <Box padding="20px">
           <Image
-            boxSize="160px"
-            boxShadow="2xl"
+            minWidth="160px"
+            width="200px"
+            objectFit="cover"
             src={image}
             borderRadius={roundImage ? '100%' : '3px'}
           />
         </Box>
-        <Box padding="20px" lineHeight="40px" color="white">
+        <Box padding="20px" lineHeight="40px" color="white" justifySelf="start">
           <Text fontSize="x-small" fontWeight="bold" casing="uppercase">
             {subtitle}
           </Text>
@@ -34,7 +40,7 @@ const GradientLayout = ({
             {description}
           </Text>
         </Box>
-      </Flex>
+      </SimpleGrid>
       <Box paddingY="50px">{children}</Box>
     </Box>
   )

@@ -1,4 +1,4 @@
-import { Box, SimpleGrid, Text } from '@chakra-ui/layout'
+import { Box, Center, SimpleGrid, Text } from '@chakra-ui/layout'
 import { Image, Skeleton } from '@chakra-ui/react'
 import GradientLayout from '../components/gradientLayout'
 import { useMe } from '../lib/hooks'
@@ -6,8 +6,6 @@ import prisma from '../lib/prisma'
 
 const Home = ({ artists }) => {
   const { user, isLoading } = useMe()
-
-  console.log('user', user)
 
   return (
     <Box>
@@ -36,12 +34,15 @@ const Home = ({ artists }) => {
                     padding="15px"
                     width="100%"
                   >
-                    <Image
-                      src={artist.avatar}
-                      borderRadius="100%"
-                      height="200px"
-                      width="100%"
-                    />
+                    <Center>
+                      <Image
+                        src={artist.avatar}
+                        borderRadius="100%"
+                        aspect
+                        height="200px"
+                        width="200px"
+                      />
+                    </Center>
                     <Box marginTop="20px">
                       <Text fontSize="large">{artist.name}</Text>
                       <Text fontSize="x-small">Artist</Text>
