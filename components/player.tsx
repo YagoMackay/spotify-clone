@@ -1,26 +1,29 @@
 import {
-  ButtonGroup,
   Box,
+  ButtonGroup,
+  Center,
+  Flex,
   IconButton,
   RangeSlider,
   RangeSliderFilledTrack,
-  RangeSliderTrack,
   RangeSliderThumb,
-  Center,
-  Flex,
+  RangeSliderTrack,
   Text,
 } from '@chakra-ui/react'
-import ReactHowler from 'react-howler'
-import { useEffect, useRef, useState } from 'react'
-import {
-  MdShuffle,
-  MdSkipPrevious,
-  MdSkipNext,
-  MdOutlinePlayCircleFilled,
-  MdOutlinePauseCircleFilled,
-  MdOutlineRepeat,
-} from 'react-icons/md'
 import { useStoreActions } from 'easy-peasy'
+import { useEffect, useRef, useState } from 'react'
+import ReactHowler from 'react-howler'
+import {
+  MdOutlinePauseCircleFilled,
+  MdOutlinePlayCircleFilled,
+  MdOutlineRepeat,
+  MdShuffle,
+  MdSkipNext,
+  MdSkipPrevious,
+  MdVolumeMute,
+  MdVolumeOff,
+  MdVolumeUp,
+} from 'react-icons/md'
 import { formatTime } from '../lib/formatters'
 
 const Player = ({ songs, activeSong }) => {
@@ -33,6 +36,8 @@ const Player = ({ songs, activeSong }) => {
   const [repeat, setRepeat] = useState(false)
   const [shuffle, setShuffle] = useState(false)
   const [duration, setDuration] = useState(0.0)
+  const [volume, setVolume] = useState(0.8)
+  const [mute, setMute] = useState(false)
   const soundRef = useRef(null)
   const repeatRef = useRef(repeat)
   const setActiveSong = useStoreActions((state: any) => state.changeActiveSong)
@@ -63,6 +68,11 @@ const Player = ({ songs, activeSong }) => {
 
   const setPlayState = (value) => {
     setPlaying(value)
+    setVolume(volume)
+  }
+
+  const setPlayVolume = (e) => {
+    setVolume(parseFloat(e[0]))
   }
 
   const onShuffle = () => {
@@ -71,6 +81,14 @@ const Player = ({ songs, activeSong }) => {
 
   const onRepeat = () => {
     setRepeat((state) => !state)
+  }
+
+  const handleMuteToggle = () => {
+    setMute((state) => !state)
+  }
+  const onMute = () => {
+    setVolume((state) => !state)
+    setMute((state) => !state)
   }
 
   const prevSong = () => {
@@ -114,104 +132,143 @@ const Player = ({ songs, activeSong }) => {
   }
 
   return (
-    <Box>
-      <Box>
-        <ReactHowler
-          playing={playing}
-          src={activeSong?.url}
-          ref={soundRef}
-          onLoad={onLoad}
-          onEnd={onEnd}
-        />
+    <Box display="flex" justifyContent="space-around" alignItems="center">
+      <Box width="60%">
+        <Box>
+          <ReactHowler
+            playing={playing}
+            src={activeSong?.url}
+            ref={soundRef}
+            onLoad={onLoad}
+            onEnd={onEnd}
+            volume={volume}
+            mute={mute}
+          />
+        </Box>
+        <Center color="gray.600">
+          <ButtonGroup>
+            <IconButton
+              outline="none"
+              variant="link"
+              aria-label="shuffle"
+              fontSize="24px"
+              color={shuffle ? 'green.500' : 'gray.600'}
+              onClick={onShuffle}
+              icon={<MdShuffle />}
+            />
+            <IconButton
+              outline="none"
+              variant="link"
+              aria-label="skip"
+              fontSize="24px"
+              icon={<MdSkipPrevious />}
+              onClick={prevSong}
+            />
+            {playing ? (
+              <IconButton
+                outline="none"
+                variant="link"
+                aria-label="pause"
+                fontSize="40px"
+                color="white"
+                icon={<MdOutlinePauseCircleFilled />}
+                onClick={() => setPlayState(false)}
+              />
+            ) : (
+              <IconButton
+                outline="none"
+                variant="link"
+                aria-label="play"
+                fontSize="40px"
+                color="white"
+                icon={<MdOutlinePlayCircleFilled />}
+                onClick={() => setPlayState(true)}
+              />
+            )}
+
+            <IconButton
+              outline="none"
+              variant="link"
+              aria-label="next"
+              fontSize="24px"
+              icon={<MdSkipNext />}
+              onClick={nextSong}
+            />
+            <IconButton
+              outline="none"
+              variant="link"
+              aria-label="repeat"
+              fontSize="24px"
+              color={repeat ? 'green.500' : 'gray.600'}
+              onClick={onRepeat}
+              icon={<MdOutlineRepeat />}
+            />
+          </ButtonGroup>
+        </Center>
+
+        <Box color="gray.600">
+          <Flex justify="center" align="center">
+            <Box width="10%">
+              <Text fontSize="xs">{formatTime(seek)}</Text>
+            </Box>
+            <Box width="80%">
+              <RangeSlider
+                aria-label={['min', 'max']}
+                step={0.1}
+                min={0}
+                id="player-range"
+                max={duration ? (duration.toFixed(2) as unknown as number) : 0}
+                onChange={onSeek}
+                value={[seek]}
+                onChangeStart={() => setIsSeeking(true)}
+                onChangeEnd={() => setIsSeeking(false)}
+              >
+                <RangeSliderTrack bg="gray.800">
+                  <RangeSliderFilledTrack bg="gray.600" />
+                </RangeSliderTrack>
+                <RangeSliderThumb index={0} />
+              </RangeSlider>
+            </Box>
+            <Box width="10%" textAlign="right">
+              <Text fontSize="xs">{formatTime(duration)}</Text>
+            </Box>
+          </Flex>
+        </Box>
       </Box>
-      <Center color="gray.600">
-        <ButtonGroup>
-          <IconButton
-            outline="none"
-            variant="link"
-            aria-label="shuffle"
-            fontSize="24px"
-            color={shuffle ? 'white' : 'gray.600'}
-            onClick={onShuffle}
-            icon={<MdShuffle />}
-          />
-          <IconButton
-            outline="none"
-            variant="link"
-            aria-label="skip"
-            fontSize="24px"
-            icon={<MdSkipPrevious />}
-            onClick={prevSong}
-          />
-          {playing ? (
-            <IconButton
-              outline="none"
-              variant="link"
-              aria-label="pause"
-              fontSize="40px"
-              color="white"
-              icon={<MdOutlinePauseCircleFilled />}
-              onClick={() => setPlayState(false)}
-            />
-          ) : (
-            <IconButton
-              outline="none"
-              variant="link"
-              aria-label="play"
-              fontSize="40px"
-              color="white"
-              icon={<MdOutlinePlayCircleFilled />}
-              onClick={() => setPlayState(true)}
-            />
-          )}
+      <Box width="10%" display="flex">
+        <IconButton
+          outline="none"
+          variant="link"
+          aria-label="repeat"
+          fontSize="24px"
+          color="gray.600"
+          onClick={onMute}
+          icon={
+            volume === 0 || mute === true ? (
+              <MdVolumeOff />
+            ) : volume > 0.6 ? (
+              <MdVolumeUp />
+            ) : (
+              <MdVolumeMute />
+            )
+          }
+        />
 
-          <IconButton
-            outline="none"
-            variant="link"
-            aria-label="next"
-            fontSize="24px"
-            icon={<MdSkipNext />}
-            onClick={nextSong}
-          />
-          <IconButton
-            outline="none"
-            variant="link"
-            aria-label="repeat"
-            fontSize="24px"
-            color={repeat ? 'white' : 'gray.600'}
-            onClick={onRepeat}
-            icon={<MdOutlineRepeat />}
-          />
-        </ButtonGroup>
-      </Center>
-
-      <Box color="gray.600">
-        <Flex justify="center" align="center">
-          <Box width="10%">
-            <Text fontSize="xs">{formatTime(seek)}</Text>
-          </Box>
-          <Box width="80%">
-            <RangeSlider
-              aria-label={['min', 'max']}
-              step={0.1}
-              min={0}
-              id="player-range"
-              max={duration ? (duration.toFixed(2) as unknown as number) : 0}
-              onChange={onSeek}
-              value={[seek]}
-              onChangeStart={() => setIsSeeking(true)}
-              onChangeEnd={() => setIsSeeking(false)}
-            >
-              <RangeSliderTrack bg="gray.800">
-                <RangeSliderFilledTrack bg="gray.600" />
-              </RangeSliderTrack>
-              <RangeSliderThumb index={0} />
-            </RangeSlider>
-          </Box>
-          <Box width="10%" textAlign="right">
-            <Text fontSize="xs">{formatTime(duration)}</Text>
-          </Box>
-        </Flex>
+        <RangeSlider
+          aria-label={['min', 'max']}
+          step={0.1}
+          min={0}
+          id="volume-range"
+          max={1}
+          onChange={setPlayVolume}
+          value={[volume]}
+        >
+          {' '}
+          <RangeSliderTrack bg="gray.800">
+            <RangeSliderFilledTrack bg="green.500" />
+          </RangeSliderTrack>
+          <RangeSliderThumb index={0} />
+        </RangeSlider>
       </Box>
     </Box>
   )
