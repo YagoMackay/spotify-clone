@@ -12,16 +12,23 @@ import {
 import { useStoreActions } from 'easy-peasy'
 import { useEffect, useState } from 'react'
 import { AiOutlineClockCircle } from 'react-icons/ai'
-import { BsFillPlayFill } from 'react-icons/bs'
+import { BsFillPauseFill, BsFillPlayFill } from 'react-icons/bs'
 import { formatDate, formatTime } from '../lib/formatters'
 
 const SongTable = ({ songs }) => {
   const playSongs = useStoreActions((store: any) => store.changeActiveSongs)
   const setActiveSong = useStoreActions((store: any) => store.changeActiveSong)
 
-  const handlePlay = (activeSong?) => {
+  const [playing, setPlaying] = useState(false)
+
+  const setPlayState = (value) => {
+    setPlaying(value)
+  }
+
+  const handlePlay = (value, activeSong?) => {
     setActiveSong(activeSong || songs[0])
     playSongs(songs)
+    setPlayState(value)
   }
 
   const [showFullTable, setShowFullTable] = useState(false)
@@ -37,26 +44,41 @@ const SongTable = ({ songs }) => {
     }
   }, [])
 
-  console.log('HERE', showFullTable)
-
   return (
     <Box bg="transparent" color="white">
       <Box padding="10px" marginBottom="20px">
         <Box marginBottom="30px">
-          <IconButton
-            icon={
-              <Center marginLeft="5px" marginTop="1px">
-                <BsFillPlayFill fontSize="30px" />{' '}
-              </Center>
-            }
-            aria-label="play"
-            justifyItems="center"
-            colorScheme="green"
-            size="lg"
-            isRound
-            justifyContent="center"
-            onClick={() => handlePlay()}
-          />
+          {playing ? (
+            <IconButton
+              icon={
+                <Center marginLeft="1px" marginTop="1px">
+                  <BsFillPauseFill fontSize="30px" />{' '}
+                </Center>
+              }
+              aria-label="play"
+              justifyItems="center"
+              colorScheme="green"
+              size="lg"
+              isRound
+              justifyContent="center"
+              onClick={() => handlePlay(false)}
+            />
+          ) : (
+            <IconButton
+              icon={
+                <Center marginLeft="5px" marginTop="1px">
+                  <BsFillPlayFill fontSize="30px" />{' '}
+                </Center>
+              }
+              aria-label="play"
+              justifyItems="center"
+              colorScheme="green"
+              size="lg"
+              isRound
+              justifyContent="center"
+              onClick={() => handlePlay(true)}
+            />
+          )}
         </Box>
         <Table variant="unstyled" verticalAlign="middle">
           <Thead borderBottom="1px solid" borderColor="rgba(255,255,255,0.2)">
