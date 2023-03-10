@@ -10,6 +10,7 @@ import {
   Tr,
 } from '@chakra-ui/react'
 import { useStoreActions } from 'easy-peasy'
+import { useEffect, useState } from 'react'
 import { AiOutlineClockCircle } from 'react-icons/ai'
 import { BsFillPlayFill } from 'react-icons/bs'
 import { formatDate, formatTime } from '../lib/formatters'
@@ -22,6 +23,21 @@ const SongTable = ({ songs }) => {
     setActiveSong(activeSong || songs[0])
     playSongs(songs)
   }
+
+  const [showFullTable, setShowFullTable] = useState(false)
+
+  useEffect(() => {
+    const handleResize = () => {
+      setShowFullTable(window.innerWidth >= 700)
+    }
+    handleResize() // initialize the state based on the initial screen size
+    window.addEventListener('resize', handleResize)
+    return () => {
+      window.removeEventListener('resize', handleResize)
+    }
+  }, [])
+
+  console.log('HERE', showFullTable)
 
   return (
     <Box bg="transparent" color="white">
@@ -47,11 +63,15 @@ const SongTable = ({ songs }) => {
             <Tr>
               <Th>#</Th>
               <Th>Artist</Th>
-
-              <Th>Date Added</Th>
-              <Th>
-                <AiOutlineClockCircle />
-              </Th>
+              {showFullTable && (
+                <>
+                  {' '}
+                  <Th>Date Added</Th>
+                  <Th>
+                    <AiOutlineClockCircle />
+                  </Th>
+                </>
+              )}
             </Tr>
           </Thead>
           <Tbody>
@@ -70,7 +90,12 @@ const SongTable = ({ songs }) => {
               >
                 <Td verticalAlign="middle">{i + 1}</Td>
                 <Td display="flex" verticalAlign="middle" alignSelf="center">
-                  <Image src={song.artist.avatar} height="50px" width="50px" />
+                  <Image
+                    src={song.artist.avatar}
+                    height="50px"
+                    width="50px"
+                    minWidth="50px"
+                  />
                   <Box display="flex" flexDirection="column" paddingLeft="10px">
                     {' '}
                     <Td padding="0px 0px 5px 0px">{song.artist.name}</Td>
@@ -79,9 +104,13 @@ const SongTable = ({ songs }) => {
                     </Td>
                   </Box>
                 </Td>
-
-                <Td verticalAlign="middle">{formatDate(song.createdAt)}</Td>
-                <Td verticalAlign="middle">{formatTime(song.duration)}</Td>
+                {showFullTable && (
+                  <>
+                    {' '}
+                    <Td verticalAlign="middle">{formatDate(song.createdAt)}</Td>
+                    <Td verticalAlign="middle">{formatTime(song.duration)}</Td>
+                  </>
+                )}
               </Tr>
             ))}
           </Tbody>
