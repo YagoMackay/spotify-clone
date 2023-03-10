@@ -8,8 +8,8 @@ const Home = ({ artists }) => {
   const { user, isLoading } = useMe()
 
   return (
-    <Box>
-      <Skeleton isLoaded={!isLoading}>
+    <Box height="100%">
+      <Skeleton isLoaded={!isLoading} height="100%">
         <GradientLayout
           roundImage
           color="red"

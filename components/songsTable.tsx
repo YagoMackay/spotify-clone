@@ -1,4 +1,4 @@
-import { Box } from '@chakra-ui/layout'
+import { Box, Center } from '@chakra-ui/layout'
 import {
   IconButton,
   Image,
@@ -28,7 +28,11 @@ const SongTable = ({ songs }) => {
       <Box padding="10px" marginBottom="20px">
         <Box marginBottom="30px">
           <IconButton
-            icon={<BsFillPlayFill fontSize="30px" />}
+            icon={
+              <Center marginLeft="5px" marginTop="1px">
+                <BsFillPlayFill fontSize="30px" />{' '}
+              </Center>
+            }
             aria-label="play"
             justifyItems="center"
             colorScheme="green"
@@ -38,7 +42,7 @@ const SongTable = ({ songs }) => {
             onClick={() => handlePlay()}
           />
         </Box>
-        <Table variant="unstyled">
+        <Table variant="unstyled" verticalAlign="middle">
           <Thead borderBottom="1px solid" borderColor="rgba(255,255,255,0.2)">
             <Tr>
               <Th>#</Th>
@@ -50,11 +54,7 @@ const SongTable = ({ songs }) => {
               </Th>
             </Tr>
           </Thead>
-          <Tbody
-            sx={{
-              verticalAlign: 'middle',
-            }}
-          >
+          <Tbody>
             {songs.map((song, i) => (
               <Tr
                 sx={{
@@ -66,9 +66,10 @@ const SongTable = ({ songs }) => {
                 key={song.id}
                 cursor="pointer"
                 onClick={() => handlePlay(song)}
+                verticalAlign="middle"
               >
-                <Td>{i + 1}</Td>
-                <Td display="flex">
+                <Td verticalAlign="middle">{i + 1}</Td>
+                <Td display="flex" verticalAlign="middle" alignSelf="center">
                   <Image src={song.artist.avatar} height="50px" width="50px" />
                   <Box display="flex" flexDirection="column" paddingLeft="10px">
                     {' '}
@@ -79,8 +80,8 @@ const SongTable = ({ songs }) => {
                   </Box>
                 </Td>
 
-                <Td>{formatDate(song.createdAt)}</Td>
-                <Td>{formatTime(song.duration)}</Td>
+                <Td verticalAlign="middle">{formatDate(song.createdAt)}</Td>
+                <Td verticalAlign="middle">{formatTime(song.duration)}</Td>
               </Tr>
             ))}
           </Tbody>
