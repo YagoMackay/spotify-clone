@@ -12,7 +12,7 @@ const PlayerBar = () => {
     <Box height="100px" width="100vw" bg="gray.900" padding="10px">
       <Flex align="center">
         {activeSong ? (
-          <Box padding="20px" color="white" width="30%" display="flex">
+          <Box padding="20px" color="white" width="25%" display="flex">
             <Image src={activeSong.artist.avatar} height="50px" width="50px" />
             <Box paddingLeft="10px">
               <Text fontSize="large">{activeSong.name}</Text>

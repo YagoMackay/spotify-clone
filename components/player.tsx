@@ -209,7 +209,9 @@ const Player = ({ songs, activeSong }) => {
         <Box color="gray.600">
           <Flex justify="center" align="center">
             <Box width="10%">
-              <Text fontSize="xs">{formatTime(seek)}</Text>
+              <Text fontSize="xs" whiteSpace="nowrap">
+                {formatTime(seek)}
+              </Text>
             </Box>
             <Box width="80%">
               <RangeSlider
@@ -230,12 +232,14 @@ const Player = ({ songs, activeSong }) => {
               </RangeSlider>
             </Box>
             <Box width="10%" textAlign="right">
-              <Text fontSize="xs">{formatTime(duration)}</Text>
+              <Text fontSize="xs" whiteSpace="nowrap">
+                {formatTime(duration)}{' '}
+              </Text>
             </Box>
           </Flex>
         </Box>
       </Box>
-      <Box width="10%" display="flex">
+      <Box width="15%" minWidth="100px" display="flex">
         <IconButton
           outline="none"
           variant="link"
