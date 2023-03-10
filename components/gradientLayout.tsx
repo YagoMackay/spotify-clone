@@ -19,8 +19,11 @@ const GradientLayout = ({
       <SimpleGrid
         bg={`${color}.600`}
         align="start"
-        minChildWidth="220px"
         spacing="10px"
+        gridTemplateColumns={{
+          lg: ' minmax(0, 250px) minmax(0, 1fr)',
+          sm: 'minmax(0, 1fr)',
+        }}
       >
         <Box padding="20px">
           <Image
@@ -31,7 +34,13 @@ const GradientLayout = ({
             borderRadius={roundImage ? '100%' : '3px'}
           />
         </Box>
-        <Box padding="20px" lineHeight="40px" color="white" justifySelf="start">
+        <Box
+          padding="20px"
+          lineHeight="40px"
+          color="white"
+          justifySelf="start"
+          float="left"
+        >
           <Text fontSize="x-small" fontWeight="bold" casing="uppercase">
             {subtitle}
           </Text>
