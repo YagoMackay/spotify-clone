@@ -1,5 +1,6 @@
-import { Box, Button, Flex, Input } from '@chakra-ui/react'
+import { Box, Button, Flex, Input, Text } from '@chakra-ui/react'
 import NextImage from 'next/image'
+import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { FC, useState } from 'react'
 import { auth } from '../lib/mutations'
@@ -10,8 +11,7 @@ const AuthForm: FC<{ mode: 'signin' | 'signup'; isSignUp: boolean }> = ({
 }) => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const [firstName, setFirstName] = useState('')
-  const [lastName, setLastName] = useState('')
+
   const [isLoading, setIsLoading] = useState(false)
   const router = useRouter()
 
@@ -19,7 +19,7 @@ const AuthForm: FC<{ mode: 'signin' | 'signup'; isSignUp: boolean }> = ({
     e.preventDefault()
     setIsLoading(true)
 
-    await auth(mode, { email, password, firstName, lastName })
+    await auth(mode, { email, password })
     setIsLoading(false)
     router.push('/')
   }
@@ -47,7 +47,7 @@ const AuthForm: FC<{ mode: 'signin' | 'signup'; isSignUp: boolean }> = ({
               type="password"
               onChange={(e) => setPassword(e.target.value)}
             />
-            {isSignUp && (
+            {/* {isSignUp && (
               <>
                 {' '}
                 <Input
@@ -61,20 +61,46 @@ const AuthForm: FC<{ mode: 'signin' | 'signup'; isSignUp: boolean }> = ({
                   onChange={(e) => setLastName(e.target.value)}
                 />
               </>
-            )}
-            <Button
-              type="submit"
-              bg="green.500"
-              isLoading={isLoading}
-              sx={{
-                '&:hover': {
-                  bg: 'green.300',
-                },
-              }}
-            >
-              {mode}
-            </Button>
+            )} */}
+            <Box display="flex" flexDirection="column">
+              <Button
+                marginTop="10px"
+                type="submit"
+                bg="green.500"
+                isLoading={isLoading}
+                sx={{
+                  '&:hover': {
+                    bg: 'green.300',
+                  },
+                }}
+              >
+                {mode === 'signin' ? 'Sign In' : 'Sign Up'}
+              </Button>
+            </Box>
           </form>
+          {!isSignUp && (
+            <>
+              <Text>Sign up here</Text>
+              <Box>
+                <Link href="/signup" passHref>
+                  <Button
+                    marginTop="10px"
+                    x
+                    type="submit"
+                    bg="green.500"
+                    sx={{
+                      '&:hover': {
+                        bg: 'green.300',
+                      },
+                    }}
+                    href="/signup"
+                  >
+                    Sign Up
+                  </Button>
+                </Link>
+              </Box>
+            </>
+          )}
         </Box>
       </Flex>
     </Box>
